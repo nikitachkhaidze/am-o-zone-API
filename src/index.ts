@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import productsRoute from "../routes/products";
+import productsRoute from "./routes/products";
 
 dotenv.config();
 
