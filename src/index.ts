@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import {productsRoute} from "../routes/products";
+import productsRoute from "../routes/products";
 
 dotenv.config();
 
@@ -14,11 +14,12 @@ mongoose.connect(mongoUrl)
     .then(() => console.log('DB connection successful'))
     .catch(console.log);
 
+app.use(express.json());
+app.use(`${apiUrl}/products/`, productsRoute);
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
-
-app.use(`${apiUrl}/products/`, productsRoute);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
