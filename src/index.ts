@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import productsRoute from "./routes/products";
+import authRoute from './routes/auth';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ mongoose.connect(mongoUrl)
 
 app.use(express.json());
 app.use(`${apiUrl}/products/`, productsRoute);
+app.use(`${apiUrl}/auth/`, authRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
