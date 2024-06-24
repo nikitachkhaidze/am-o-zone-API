@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {UserModel} from "../models/User";
+import {UserModel} from "../models/user.model";
 import AES from 'crypto-js/aes';
 import CryptoJS from "crypto-js/core";
 import jwt from 'jsonwebtoken';

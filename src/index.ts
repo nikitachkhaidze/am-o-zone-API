@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import productsRoute from "./routes/products";
 import authRoute from './routes/auth';
+import userRoute from './routes/user';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ mongoose.connect(mongoUrl)
 app.use(express.json());
 app.use(`${apiUrl}/products/`, productsRoute);
 app.use(`${apiUrl}/auth/`, authRoute);
+app.use(`${apiUrl}/user/`, userRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
