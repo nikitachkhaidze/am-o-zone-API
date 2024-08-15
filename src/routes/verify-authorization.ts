@@ -22,7 +22,6 @@ const verifyToken: RequestHandler = (req, res, next) => {
 
 export const verifyAuthorization: RequestHandler = (req, res, next) => {
     verifyToken(req, res, () => {
-        console.log(req.user, req.params);
         if (req.user.id === req.params.id || req.user.isAdmin) {
             next();
         } else {
