@@ -11,9 +11,21 @@ const products = [
 
 router.get(`/`,async (req, res) => {
     try {
-        const products = await ProductModel.find();
+        const { page = 1, limit = 10 } = req.query;
+
+        const products = await ProductModel.find().limit(1);
 
         res.status(200).json(products);
+    } catch (err) {
+        res.status(500).json({ error: err })
+    }
+})
+
+router.get(`/:id`,async (req, res) => {
+    try {
+        const product = await ProductModel.findById(req.params.id);
+
+        res.status(200).json(product);
     } catch (err) {
         res.status(500).json({ error: err })
     }
