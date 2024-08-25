@@ -34,7 +34,12 @@ CREATE TABLE cart (
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE
 );
 
-CREATE TABLE cart_items (
+CREATE TABLE tag (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE cart_product (
     cart_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT DEFAULT 1,
@@ -44,13 +49,21 @@ CREATE TABLE cart_items (
     CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE SET NULL
 );
 
-CREATE TABLE order_items (
+CREATE TABLE order_product (
     order_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT DEFAULT 1,
     price NUMERIC(15, 2) NOT NULL CHECK (price > 0),
     PRIMARY KEY (order_id, product_id),
     CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES order (id) ON DELETE CASCADE,
+    CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE SET NULL
+);
+
+CREATE TABLE tag_product (
+    tag_id INT NOT NULL,
+    product_id INT NOT NULL,
+    PRIMARY KEY (tag_id, product_id),
+    CONSTRAINT fk_tag FOREIGN KEY (tag_id) REFERENCES tag (id) ON DELETE CASCADE,
     CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE SET NULL
 );
 
