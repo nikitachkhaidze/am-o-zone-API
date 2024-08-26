@@ -1,7 +1,9 @@
 import {Router} from 'express';
 import {verifyAuthorization} from "./verify-authorization";
-import {UserModel} from "../models/user.model";
 import AES from "crypto-js/aes";
+import {QueryConfig} from "pg";
+import {User} from "../types/user.interface";
+import {pool} from "../index";
 
 const router = Router();
 const passwordSecret = process.env.PASSWORD_SECRET ?? '';
@@ -12,10 +14,12 @@ router.put('/:id', verifyAuthorization, async (req, res) => {
     }
 
     try {
-        const updatedUser = await UserModel.findByIdAndUpdate(req.params.id,
-            { $set: req.body },
-            { new: true },
-        );
+        const query: QueryConfig = {
+            text: 'UPDATE "user" SET username = $1, email = $2, password = $3 WHERE id = $4',
+            values: [req.body.username, req.body.email, req.body.password, req.params.id],
+        };
+        const userQueryResult = await pool.query<User>(query);
+        const updatedUser = userQueryResult.rows[0];
 
         res.status(200).json(updatedUser);
     } catch (err) {

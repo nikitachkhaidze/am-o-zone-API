@@ -18,7 +18,7 @@ CREATE TABLE product (
     color VARCHAR(50),
 );
 
-CREATE TABLE order (
+CREATE TABLE "order" (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     price NUMERIC(15, 2) NOT NULL CHECK (price > 0),

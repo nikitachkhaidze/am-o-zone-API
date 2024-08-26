@@ -1,40 +1,36 @@
 import {Router} from 'express';
-import {ProductModel} from "../models/product.model";
+import {QueryConfig} from "pg";
+import {Product} from "../types/product.interface";
+import {pool} from "../index";
+import {mapKeysToCamelCase} from "../utils/map-keys-to-camel-case";
 
 const router = Router();
-const products = [
-    {
-        id: 0,
-        name: 'xuy',
-    }
-];
 
-router.get(`/`,async (req, res) => {
+router.get(`/`, async (req, res) => {
     try {
-        const { page = 1, limit = 10 } = req.query;
+        const productsQueryResult = await pool.query<Product>('SELECT * FROM product');
+        const products = productsQueryResult.rows;
 
-        const products = await ProductModel.find().limit(1);
-
-        res.status(200).json(products);
+        res.status(200).json(products.map(mapKeysToCamelCase));
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: err })
     }
 })
 
 router.get(`/:id`,async (req, res) => {
     try {
-        const product = await ProductModel.findById(req.params.id);
+        const query: QueryConfig = {
+            text: 'SELECT * FROM product WHERE id = $1',
+            values: [req.params.id],
+        };
+        const productsQueryResult = await pool.query<Product>(query);
+        const product = productsQueryResult.rows[0];
 
-        res.status(200).json(product);
+        res.status(200).json(mapKeysToCamelCase(product));
     } catch (err) {
         res.status(500).json({ error: err })
     }
 })
-
-router.post('/', (req, res) => {
-   products.push(req.body);
-
-   res.send(products);
-});
 
 export default router;
