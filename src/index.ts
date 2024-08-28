@@ -5,7 +5,7 @@ import authRoute from './routes/auth';
 import userRoute from './routes/user';
 import cors, {CorsOptions} from 'cors';
 import Pool from "pg-pool";
-import {getPoolConfig} from "./db/db";
+import {getPoolConfig} from "./db/pool-config";
 
 dotenv.config();
 const app: Express = express();

@@ -13,7 +13,7 @@ CREATE TABLE product (
     description TEXT NOT NULL,
     img_url TEXT NOT NULL,
     price NUMERIC(15, 2) NOT NULL CHECK (price > 0),
-    quantity_in_stock INT DEFAULT 0
+    quantity_in_stock INT DEFAULT 0,
     size VARCHAR(50),
     color VARCHAR(50),
 );
@@ -34,7 +34,7 @@ CREATE TABLE cart (
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE
 );
 
-CREATE TABLE tag (
+CREATE TABLE category (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
@@ -59,11 +59,11 @@ CREATE TABLE order_product (
     CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE SET NULL
 );
 
-CREATE TABLE tag_product (
-    tag_id INT NOT NULL,
+CREATE TABLE category_product (
+    category_id INT NOT NULL,
     product_id INT NOT NULL,
-    PRIMARY KEY (tag_id, product_id),
-    CONSTRAINT fk_tag FOREIGN KEY (tag_id) REFERENCES tag (id) ON DELETE CASCADE,
+    PRIMARY KEY (category_id, product_id),
+    CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES category (id) ON DELETE CASCADE,
     CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE SET NULL
 );
 
