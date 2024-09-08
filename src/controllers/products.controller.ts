@@ -46,6 +46,18 @@ class ProductController {
             res.status(500).json({ error: err })
         }
     }
+
+    async getCategories(req: Request, res: Response) {
+        try {
+            const categoriesQueryResult = await pool.query<{ categories: string[] }>('SELECT array_agg(name) as categories FROM category');
+            const categories = categoriesQueryResult.rows[0].categories;
+
+            res.status(200).json(categories);
+        } catch (err) {
+            res.status(500).json({ error: err })
+        }
+
+    }
 }
 
 export const productController = new ProductController();

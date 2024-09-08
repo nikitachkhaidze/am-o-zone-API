@@ -13,6 +13,10 @@ const snakeToCamel = (string: string) => {
 }
 
 export const mapKeysToCamelCase = (object: Object) => {
+    if (Array.isArray(object)) {
+        return object;
+    }
+
     const newObject = Object.create(null);
 
     Object.entries(object).forEach(([key, value ]) => {
