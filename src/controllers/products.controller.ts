@@ -3,6 +3,15 @@ import {Product} from "../types/product.interface";
 import {mapKeysToCamelCase} from "../utils/map-keys-to-camel-case";
 import { Request, Response } from 'express';
 import {QueryConfig} from "pg";
+import {
+    appendFilters,
+    appendJoin,
+    appendLimit,
+    appendOffset,
+    appendOrderBy,
+    selectQuery
+} from "../db/queries/select.query";
+import { pipe } from "../utils/utils";
 
 class ProductController {
     async getProducts(req: Request, res: Response) {
@@ -10,11 +19,33 @@ class ProductController {
             const pageSize = +(req.query.pageSize ?? 10);
             const page = +(req.query.page ?? 1);
             const offset = pageSize * (page - 1);
+            const sort = req.query.sort as string;
 
-            const query: QueryConfig = {
-                text: 'SELECT * FROM product ORDER BY id LIMIT $1 OFFSET $2',
-                values: [pageSize, offset],
-            };
+            const filters = req.query.category ? {
+                'category.name': req.query.category as string,
+            } : undefined;
+
+            const selectList = 'product.id AS id,\n' +
+                '       product.name AS name,\n' +
+                '       product.description,\n' +
+                '       product.img_url,\n' +
+                '       product.price,\n' +
+                '       product.quantity_in_stock,\n' +
+                '       product.size,\n' +
+                '       product.color';
+
+            const query = pipe(
+                selectQuery('product', selectList),
+                appendJoin('category_product', 'product.id = category_product.product_id'),
+                appendJoin('category', 'category_product.category_id = category.id'),
+                appendFilters(filters),
+                appendOrderBy(sort),
+                appendLimit(pageSize),
+                appendOffset(offset),
+            );
+
+            console.log(query);
+
             const productsQueryResult = await pool.query<Product>(query);
             const products = productsQueryResult.rows;
 
