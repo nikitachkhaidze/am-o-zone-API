@@ -7,10 +7,9 @@ class ProductController {
       const category = req.query.category as string;
       const pageSize = +(req.query.pageSize ?? 10);
       const page = +(req.query.page ?? 1);
-      const offset = pageSize * (page - 1);
       const sort = req.query.sort as string;
 
-      const response = await productsService.getProducts(category, sort, pageSize, offset);
+      const response = await productsService.getProducts(category, sort, pageSize, page);
 
       res.status(200).json(response);
     } catch (err) {
@@ -21,7 +20,7 @@ class ProductController {
 
   async getOneProduct(req: Request, res: Response) {
     try {
-      const response = await productsService.getOneProduct(req.params.id);
+      const response = await productsService.getProductById(req.params.id);
 
       res.status(200).json(response);
     } catch (err) {

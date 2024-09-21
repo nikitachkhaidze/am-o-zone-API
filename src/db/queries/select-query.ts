@@ -56,6 +56,12 @@ export class SelectQuery {
     return this;
   }
 
+  addWith(withName: string, withQuery: string) {
+    this.query = `WITH ${withName} AS (${withQuery}) ${this.query}`;
+
+    return this;
+  }
+
   getQuery() {
     const { query } = this;
     this.query = '';
