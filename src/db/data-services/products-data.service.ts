@@ -2,13 +2,20 @@ import { QueryConfig } from 'pg';
 import { SelectQuery } from '../queries/select-query';
 import { pool } from '../../index';
 import { Product } from '../../types/product.interface';
+import { Category } from '../../types/category.interface';
+import { defaultSortParams, SortOrder, SortParams } from '../../types/sort-order.interface';
 
 class ProductsDataService {
   async getProducts(category: string, sort: string, pageSize: number, page: number) {
     const filters = category ? {
-      'category.name': category,
+      'category.id': category,
     } : undefined;
     const offset = pageSize * (page - 1);
+    const sortToParamsMap = new Map<string, SortParams>([
+      ['priceASC', { column: 'price', order: SortOrder.asc }],
+      ['priceDESC', { column: 'price', order: SortOrder.desc }],
+    ]);
+    const sortParams = sortToParamsMap.get(sort) ?? defaultSortParams;
 
     const selectList = 'DISTINCT product.id AS id,\n'
           + '       product.name AS name,\n'
@@ -33,7 +40,7 @@ class ProductsDataService {
         category: 'category_product.category_id = category.id',
       })
       .addWheres(filters)
-      .addOrderBy(sort)
+      .addOrderBy(sortParams.column, sortParams.order)
       .addLimit(pageSize)
       .addOffset(offset)
       .getQuery();
@@ -58,12 +65,11 @@ class ProductsDataService {
   }
 
   async getCategories() {
-    const categoriesQueryResult = await pool.query<{ categories: string[] }>(
-      'SELECT array_agg(name) as categories FROM category',
+    const categoriesQueryResult = await pool.query<Category>(
+      'SELECT * FROM category',
     );
-    const { categories } = categoriesQueryResult.rows[0];
 
-    return categories;
+    return categoriesQueryResult.rows;
   }
 }
 

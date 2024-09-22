@@ -8,7 +8,7 @@ class ProductsService {
     return {
       products: products.map(mapKeysToCamelCase),
       pagination: {
-        currentPage: page - 1,
+        currentPageIndex: page - 1,
         totalItems,
       },
     };

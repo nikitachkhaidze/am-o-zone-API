@@ -1,4 +1,5 @@
 import format from 'pg-format';
+import { SortOrder } from '../../types/sort-order.interface';
 
 export class SelectQuery {
   private query = '';
@@ -47,12 +48,8 @@ export class SelectQuery {
     return this;
   }
 
-  addOrderBy(orderBy?: string) {
-    if (!orderBy) {
-      return this;
-    }
-
-    this.query = `${this.query} ${format('ORDER BY %I', orderBy)}`;
+  addOrderBy(column: string, sortOrder: SortOrder) {
+    this.query = `${this.query} ${format('ORDER BY %I %s', column, sortOrder)}`;
     return this;
   }
 
