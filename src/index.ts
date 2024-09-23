@@ -1,11 +1,11 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors, { CorsOptions } from 'cors';
-import Pool from 'pg-pool';
+import { Knex, knex as initKnex } from 'knex';
 import productsRoute from './routes/products';
+import { getDBConfig } from './db/db-config';
 import authRoute from './routes/auth';
 import userRoute from './routes/user';
-import { getPoolConfig } from './db/pool-config';
 
 dotenv.config();
 const app: Express = express();
@@ -14,7 +14,7 @@ const apiUrl = process.env.API_URL ?? '';
 const corsOptions: CorsOptions = {
   origin: process.env.CORS_WHITELIST ?? '',
 };
-export const pool = new Pool(getPoolConfig());
+export const knex: Knex = initKnex(getDBConfig());
 
 app.use(express.json());
 app.use(cors(corsOptions));
@@ -31,7 +31,7 @@ app.listen(port, () => {
 });
 
 process.on('SIGINT', async () => {
-  await pool.end();
+  await knex.destroy();
   console.log('pool closed');
   process.exit(0);
 });

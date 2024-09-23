@@ -1,9 +1,7 @@
 import { Router } from 'express';
 import AES from 'crypto-js/aes';
-import { QueryConfig } from 'pg';
 import { verifyAuthorization } from './verify-authorization';
-import { User } from '../types/user.interface';
-import { pool } from '../index';
+import { knex } from '../index';
 
 const router = Router();
 const passwordSecret = process.env.PASSWORD_SECRET ?? '';
@@ -14,12 +12,14 @@ router.put('/:id', verifyAuthorization, async (req, res) => {
   }
 
   try {
-    const query: QueryConfig = {
-      text: 'UPDATE "user" SET username = $1, email = $2, password = $3 WHERE id = $4',
-      values: [req.body.username, req.body.email, req.body.password, req.params.id],
-    };
-    const userQueryResult = await pool.query<User>(query);
-    const updatedUser = userQueryResult.rows[0];
+    const updatedUser = await knex('user')
+      .where({ id: req.params.id })
+      .update({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+      }, ['*'])
+      .first();
 
     res.status(200).json(updatedUser);
   } catch (err) {
