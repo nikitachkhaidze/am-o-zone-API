@@ -1,24 +1,23 @@
 import { Knex } from 'knex';
-import { User, UserData } from '../user.interface';
-import { Product, ProductData } from '../product.interface';
-import { Category, CategoryData } from '../category.interface';
+import { User } from '../user.interface';
+import { Product } from '../product.interface';
+import { Category } from '../category.interface';
 
 declare module 'knex/types/tables' {
     interface Tables {
         product: Knex.CompositeTableType<
             Product,
-            Omit<ProductData, 'id'>,
-            Partial<Omit<ProductData, 'id'>>
+            Omit<Product, 'id'>,
+            Partial<Omit<Product, 'id'>>
         >;
         category: Knex.CompositeTableType<
             Category,
-            Omit<CategoryData, 'id'>,
-            Partial<Omit<CategoryData, 'id'>>
+            Omit<Category, 'id'>,
+            Partial<Omit<Category, 'id'>>
         >,
         user: Knex.CompositeTableType<
             User,
-            Omit<UserData, 'id' | 'is_admin'>,
-            Partial<Pick<UserData, 'username' | 'password' | 'email'>>
+            Pick<User, 'username' | 'password' | 'email'>
         >;
     }
 }

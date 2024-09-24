@@ -1,3 +1,5 @@
+import { mapObjectKeys } from './utils';
+
 const capitalize = (string: string) => {
   if (string.length === 0) {
     return '';
@@ -12,16 +14,4 @@ const snakeToCamel = (string: string) => {
   return `${start}${rest.map(capitalize).join('')}`;
 };
 
-export const mapKeysToCamelCase = (object: Object) => {
-  if (Array.isArray(object)) {
-    return object;
-  }
-
-  const newObject = Object.create(null);
-
-  Object.entries(object).forEach(([key, value]) => {
-    newObject[snakeToCamel(key)] = value;
-  });
-
-  return newObject;
-};
+export const mapKeysToCamelCase = mapObjectKeys(snakeToCamel);

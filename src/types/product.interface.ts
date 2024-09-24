@@ -1,14 +1,10 @@
-import { CamelizeKeys } from './camelize-keys.type';
-
-export interface ProductData {
+export interface Product {
     id: number,
     name: string,
     description: string,
-    img_url: string,
+    imgUrl: string,
     price: number,
-    quantity_in_stock: number,
+    quantityInStock: number,
     size?: string,
     color?: string,
 }
-
-export type Product = CamelizeKeys<ProductData>;

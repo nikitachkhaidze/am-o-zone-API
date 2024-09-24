@@ -14,7 +14,8 @@ router.post('/register', async (req, res) => {
         username: req.body.username,
         email: req.body.email,
         password: AES.encrypt(req.body.password, passwordSecret).toString(),
-      }, ['id', 'username', 'email', 'is_admin', 'created_at']);
+      })
+      .returning(['id', 'username', 'email', 'isAdmin', 'createdAt']);
 
     res.status(201).json(savedUser[0]);
   } catch (error) {

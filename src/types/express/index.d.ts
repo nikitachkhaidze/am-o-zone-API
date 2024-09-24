@@ -1,4 +1,4 @@
-import {User} from "./src/types/user.interface";
+import { User } from './src/types/user.interface';
 
 declare global {
     declare namespace Express {
@@ -7,5 +7,3 @@ declare global {
         }
     }
 }
-
-
