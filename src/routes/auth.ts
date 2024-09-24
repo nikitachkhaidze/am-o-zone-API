@@ -2,7 +2,6 @@ import { Router } from 'express';
 import AES from 'crypto-js/aes';
 import CryptoJS from 'crypto-js/core';
 import jwt from 'jsonwebtoken';
-import { mapKeysToCamelCase } from '../utils/map-keys-to-camel-case';
 import { knex } from '../index';
 
 const router = Router();
@@ -17,7 +16,7 @@ router.post('/register', async (req, res) => {
         password: AES.encrypt(req.body.password, passwordSecret).toString(),
       }, ['id', 'username', 'email', 'is_admin', 'created_at']);
 
-    res.status(201).json(mapKeysToCamelCase(savedUser[0]));
+    res.status(201).json(savedUser[0]);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
@@ -26,9 +25,8 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const user = await knex
+    const user = await knex('user')
       .select()
-      .table('user')
       .where({ username: req.body.username })
       .first();
 
@@ -49,7 +47,7 @@ router.post('/login', async (req, res) => {
     }, jwtSecretKey, { expiresIn: '3d' });
     const { password, ...userInfo } = user;
 
-    res.status(200).json(mapKeysToCamelCase({ ...userInfo, accessToken }));
+    res.status(200).json({ ...userInfo, accessToken });
   } catch (error) {
     res.status(500).json(error);
   }

@@ -1,3 +1,5 @@
+import { mapKeysToCamelCase } from '../utils/map-keys-to-camel-case';
+
 export const getDBConfig = () => ({
   client: 'pg',
   version: '7.2',
@@ -15,5 +17,12 @@ export const getDBConfig = () => ({
       max: 20,
       min: 0,
     },
+  },
+  postProcessResponse(result: Record<string, unknown> | Record<string, unknown>[]) {
+    if (Array.isArray(result)) {
+      return result.map((row) => mapKeysToCamelCase(row));
+    }
+
+    return mapKeysToCamelCase(result);
   },
 });

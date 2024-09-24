@@ -1,4 +1,6 @@
-export interface Product {
+import { CamelizeKeys } from './camelize-keys.type';
+
+export interface ProductData {
     id: number,
     name: string,
     description: string,
@@ -8,3 +10,5 @@ export interface Product {
     size?: string,
     color?: string,
 }
+
+export type Product = CamelizeKeys<ProductData>;

@@ -13,12 +13,13 @@ router.put('/:id', verifyAuthorization, async (req, res) => {
 
   try {
     const updatedUser = await knex('user')
-      .where({ id: req.params.id })
+      .where('id', req.params.id)
       .update({
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
-      }, ['*'])
+      })
+      .returning(['username', 'email'])
       .first();
 
     res.status(200).json(updatedUser);

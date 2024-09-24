@@ -1,4 +1,3 @@
-import { mapKeysToCamelCase } from '../utils/map-keys-to-camel-case';
 import { productsDataService } from '../db/data-services/products-data.service';
 
 class ProductsService {
@@ -6,7 +5,7 @@ class ProductsService {
     const { products, totalItems } = await productsDataService.getProducts(category, sort, pageSize, page);
 
     return {
-      products: products.map(mapKeysToCamelCase),
+      products,
       pagination: {
         currentPageIndex: page - 1,
         totalItems,
@@ -17,7 +16,11 @@ class ProductsService {
   async getProductById(id: string) {
     const product = await productsDataService.getProductById(id);
 
-    return mapKeysToCamelCase(product);
+    if (!product) {
+      throw new Error('Could not retrieve product');
+    }
+
+    return product;
   }
 
   async getCategories() {
