@@ -8,3 +8,6 @@ export interface Product {
     size?: string,
     color?: string,
 }
+
+export type ProductInsert = Omit<Product, 'id'>;
+export type ProductUpdate = Partial<ProductInsert>

@@ -6,3 +6,6 @@ export interface User {
     isAdmin: boolean,
     createdAt: string,
 }
+
+export type UserInsert = Pick<User, 'username' | 'password' | 'email'>;
+export type UserUpdate = Partial<UserInsert>;
