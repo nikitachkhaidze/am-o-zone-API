@@ -14,13 +14,7 @@ class ProductsService {
   }
 
   async getProductById(id: string) {
-    const product = await productsDataService.getProductById(id);
-
-    if (!product) {
-      throw new Error('Could not retrieve product');
-    }
-
-    return product;
+    return productsDataService.getProductById(id);
   }
 
   async getCategories() {

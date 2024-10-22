@@ -15,7 +15,7 @@ class AuthService {
       password: encryptedPassword,
     });
 
-    return savedUser[0];
+    return savedUser;
   }
 
   async loginUser(username: string, userPassword: string) {

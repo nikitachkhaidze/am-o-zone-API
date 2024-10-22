@@ -6,6 +6,7 @@ import productsRoute from './routes/products';
 import { getDBConfig } from './db/db-config';
 import authRoute from './routes/auth';
 import userRoute from './routes/user';
+import cartRoute from './routes/cart';
 
 dotenv.config();
 const app: Express = express();
@@ -21,6 +22,7 @@ app.use(cors(corsOptions));
 app.use(`${apiUrl}/products/`, productsRoute);
 app.use(`${apiUrl}/auth/`, authRoute);
 app.use(`${apiUrl}/user/`, userRoute);
+app.use(`${apiUrl}/cart/`, cartRoute);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server');
