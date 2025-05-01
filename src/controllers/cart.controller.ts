@@ -4,8 +4,8 @@ import { cartService } from '../services/cart.service';
 class CartController {
   async getCartItems(req: Request, res: Response) {
     try {
-      const userId = +req.params.id;
-      const result = await cartService.getCartItems(userId);
+      const userId = req.user?.id;
+      const result = userId ? await cartService.getCartItems(userId) : [];
 
       res.status(200).json(result);
     } catch (error) {
